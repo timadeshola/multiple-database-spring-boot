@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: Multiple Database Spring Boot App
+  lifecycle:
+    timeout-per-shutdown-phase: 1m
+  datasource:
+    mysql:
+      username: root
+      password: developer
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/springboot1?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&noAccessToProcedureBodies=true
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      ddl-auto: create-drop
+      show-sql: true
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    postgres:
+      username: postgres
+      password:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/springboot2
+      dialect: org.hibernate.dialect.PostgreSQL10Dialect
+      ddl-auto: create-drop
+      show-sql: true
+      database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+
+logging:
+  file:
+    path: logs/application.log
+  level:
+    com.example.multipledatabasespringboot.*: INFO
+    org.hibernate.*: DEBUG
+
+management:
+  server:
+    port: 9070
+    servlet:
+      context-path: /api/v1/
+  health:
+    db.enabled: true
+  endpoints:
+    web.exposure.include: health,info,metrics,hystrix,prometheus,refresh
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+server:
+  port: 19070
+  compression:
+    enabled: true
+    min-response-size: 1
+  max-http-header-size: 1000000
+  servlet:
+    context-path: /api/v1
+  shutdown: graceful
